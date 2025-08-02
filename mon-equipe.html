@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Équipe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #0078d7;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .team-info {
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background-color: #f0f0f0;
+      border-radius: 3px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mon Équipe</h1>
+  </header>
+  <main>
+    <div class="team-info">
+      <h2 id="team-name">Nom de l'équipe : Chargement...</h2>
+      <p id="team-code">Code pour rejoindre : Chargement...</p>
+      <p id="team-progression">Progression : Chargement...</p>
+      <h3>Membres :</h3>
+      <ul id="team-members">
+        <li>Chargement des membres...</li>
+      </ul>
+    </div>
+    <button onclick="goBack()">Retour</button>
+  </main>
+
+  <script>
+    // Récupérer l'ID utilisateur depuis le stockage local
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      alert("Vous devez être connecté pour voir votre équipe.");
+      window.location.href = "connexion.html"; // Rediriger vers la page de connexion si l'utilisateur n'est pas identifié
+    } else {
+      // Appeler le backend pour récupérer les informations de l'équipe
+      fetch(`https://chasse-au-tresor-e05bf79259e7.herokuapp.com/user/${userId}/team`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.team) {
+            // Afficher les informations de l'équipe
+            document.getElementById("team-name").textContent = `Nom de l'équipe : ${data.team.name}`;
+            document.getElementById("team-code").textContent = `Code pour rejoindre : ${data.team.code}`;
+            document.getElementById("team-progression").textContent = `Progression : ${data.team.progression}%`;
+
+            // Afficher les membres de l'équipe
+            const membersList = document.getElementById("team-members");
+            membersList.innerHTML = ""; // Réinitialiser la liste
+            data.team.members.forEach(member => {
+              const li = document.createElement("li");
+              li.textContent = member.name;
+              membersList.appendChild(li);
+            });
+          } else {
+            alert("Aucune équipe associée à cet utilisateur.");
+            document.getElementById("team-name").textContent = "Nom de l'équipe : Non défini";
+            document.getElementById("team-code").textContent = "Code pour rejoindre : Non défini";
+            document.getElementById("team-progression").textContent = "Progression : Non défini";
+          }
+        })
+        .catch(error => {
+          console.error("Erreur lors de la récupération des données :", error);
+          alert("Impossible de récupérer les informations de l'équipe.");
+        });
+    }
+
+    // Fonction pour revenir à la page principale
+    function goBack() {
+      window.location.href = "accueil.html";
+    }
+  </script>
+</body>
+</html>

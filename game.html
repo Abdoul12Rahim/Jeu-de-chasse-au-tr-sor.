@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chasse au Trésor - Progression</title>
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Chasse au Trésor</h1>
+    
+    <!-- Message d'instructions -->
+    <p id="instructions" style="color: #ccc; font-size: 1.2rem;">
+      Trouvez l'indice et scannez le QR code associé pour continuer.
+    </p>
+
+    <!-- Indice et lieu -->
+    <p id="indice-name" style="font-size: 1.5rem; font-weight: bold;">Chargement de l'indice...</p>
+    <p id="indice-location" style="font-size: 1.2rem; color: #888;">Lieu en cours de chargement...</p>
+
+    <!-- Zone d'affichage de la progression -->
+    <p id="progress-message" style="margin-top: 20px; font-size: 1.2rem;">Mise à jour de votre progression...</p>
+    
+    <!-- Bouton quitter -->
+    <div style="margin-top: 30px;">
+      <button id="quit-game" class="btn">Quitter</button>
+    </div>
+
+    <!-- Zone pour afficher des messages -->
+    <p id="status-message" style="color: red; margin-top: 20px;"></p>
+  </div>
+
+  <script src="game.js"></script>
+  <script>
+    // Gérer le bouton "Quitter"
+    document.getElementById("quit-game").addEventListener("click", () => {
+      window.location.href = "accueil.html";
+    });
+  </script>
+</body>
+</html>

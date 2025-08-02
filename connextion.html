@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaires d'inscription et de connexion</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script> <!-- Assurez-vous que le JS est chargé après le DOM -->
+</head>
+<body>
+   
+    <div class="container" id="container">
+        <!-- Formulaire d'inscription -->
+        <div class="form-container sign-up-container">
+            <form method="post">
+                <h1>Créer un compte</h1>
+                <div class="social-container">
+                    <a href="#" class="social">
+                        <img src="https://media.giphy.com/media/prhu1VNvjvJQNaJnEc/giphy.gif" alt="Treasure GIF" class="social-gif">
+                    </a>
+                </div>
+               
+                <span>👈ou connectez-vous</span>
+                <input type="text" name="name" placeholder="Nom" required />
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Mot de passe" required />
+                <button type="submit">Inscription</button> <!-- type="submit" pour permettre la soumission -->
+            </form>
+        </div>
+ 
+        <!-- Formulaire de connexion -->
+        <div class="form-container sign-in-container">
+            <form method="post" action="/login">
+                <h1>Se connecter</h1>
+                <div class="social-container">
+                    <a href="#" class="social">
+                        <img src="https://media.giphy.com/media/prhu1VNvjvJQNaJnEc/giphy.gif" alt="Treasure GIF" class="social-gif">
+                    </a>
+                </div>
+                <span>Se connecter ou créer un compte 👉</span>
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Mot de passe" required />
+                <a href="forgot-password.html" class="forget">Mot de passe oublié ?</a>
+                <button type="submit">Connexion</button>
+            </form>
+        </div>
+ 
+        <!-- Overlay pour les transitions -->
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1 class="Bienvenue">Bienvenue!😁</h1>
+                <p>Pour rester en contact avec nous, veuillez vous connecter avec vos informations personnelles</p>
+                <button class="ghost" id="signIn">Se connecter</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1>Hello cher aventurier👋</h1>
+                <p>Entrez vos données personnelles et commencez un voyage inspirant avec nous</p>
+                <button class="ghost" id="signUp">S'inscrire</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+ 
+Dispose d’un menu contextuel

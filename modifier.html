@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier et Supprimer des Données</title>
+  <link rel="stylesheet" href="modifier.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Modifier et Supprimer des Données</h1>
+
+    <!-- Section pour les chasses -->
+    <section>
+      <h2>Chasses Disponibles</h2>
+      <p id="status-chasses">Chargement des chasses...</p>
+      <ul id="chassesList">
+        <!-- Les chasses disponibles seront affichées ici -->
+      </ul>
+    </section>
+
+    <!-- Section pour les équipes -->
+    <section>
+      <h2>Équipes Disponibles</h2>
+      <p id="status-teams">Chargement des équipes...</p>
+      <ul id="teamsList">
+        <!-- Les équipes disponibles seront affichées ici -->
+      </ul>
+    </section>
+
+    <!-- Section pour les utilisateurs -->
+    <section>
+      <h2>Utilisateurs Disponibles</h2>
+      <p id="status-users">Chargement des utilisateurs...</p>
+      <ul id="usersList">
+        <!-- Les utilisateurs disponibles seront affichés ici -->
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    const BASE_URL = "https://chasse-au-tresor-e05bf79259e7.herokuapp.com";
+    const LOCAL_BASE_URL = "http://localhost:3000";
+
+    // Fonction pour récupérer et afficher les chasses disponibles
+    async function fetchChasses() {
+      const chassesList = document.getElementById("chassesList");
+      const statusChasses = document.getElementById("status-chasses");
+
+      try {
+        const response = await fetch(`${LOCAL_BASE_URL}/chasses`);
+        const data = await response.json();
+
+        if (response.ok) {
+          const chasses = data.chasses;
+
+          if (chasses.length === 0) {
+            statusChasses.textContent = "Aucune chasse disponible.";
+            return;
+          }
+
+          statusChasses.textContent = "";
+          chassesList.innerHTML = "";
+          chasses.forEach((chasse) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <strong>Nom :</strong> ${chasse.name}<br>
+              <strong>ID :</strong> ${chasse._id}<br>
+              <button onclick="deleteChasse('${chasse._id}')">Supprimer</button>
+            `;
+            chassesList.appendChild(li);
+          });
+        } else {
+          statusChasses.textContent = data.message || "Erreur lors du chargement des chasses.";
+        }
+      } catch (error) {
+        console.error("Erreur :", error);
+        statusChasses.textContent = "Erreur de connexion au serveur.";
+      }
+    }
+
+    // Fonction pour récupérer et afficher les équipes disponibles
+    async function fetchTeams() {
+      const teamsList = document.getElementById("teamsList");
+      const statusTeams = document.getElementById("status-teams");
+
+      try {
+        const response = await fetch(`${LOCAL_BASE_URL}/teams`);
+        const data = await response.json();
+
+        if (response.ok) {
+          const teams = data.teams;
+
+          if (teams.length === 0) {
+            statusTeams.textContent = "Aucune équipe disponible.";
+            return;
+          }
+
+          statusTeams.textContent = "";
+          teamsList.innerHTML = "";
+          teams.forEach((team) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <strong>Nom :</strong> ${team.name}<br>
+              <strong>ID :</strong> ${team._id}<br>
+              Membres :
+              <ul>
+                ${team.members
+                  .map((member) => `<li>${member.name}</li>`)
+                  .join("")}
+              </ul>
+              <button onclick="deleteTeam('${team._id}')">Supprimer</button>
+            `;
+            teamsList.appendChild(li);
+          });
+        } else {
+          statusTeams.textContent = data.message || "Erreur lors du chargement des équipes.";
+        }
+      } catch (error) {
+        console.error("Erreur :", error);
+        statusTeams.textContent = "Erreur de connexion au serveur.";
+      }
+    }
+
+    // Fonction pour récupérer et afficher les utilisateurs disponibles
+    async function fetchUsers() {
+      const usersList = document.getElementById("usersList");
+      const statusUsers = document.getElementById("status-users");
+
+      try {
+        const response = await fetch(`${LOCAL_BASE_URL}/users`);
+        const data = await response.json();
+
+        if (response.ok) {
+          const users = data.users;
+
+          if (users.length === 0) {
+            statusUsers.textContent = "Aucun utilisateur disponible.";
+            return;
+          }
+
+          statusUsers.textContent = "";
+          usersList.innerHTML = "";
+          users.forEach((user) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <strong>Nom :</strong> ${user.name}<br>
+              <strong>ID :</strong> ${user._id}<br>
+              <strong>Email :</strong> ${user.email}<br>
+              <button onclick="deleteUser('${user._id}')">Supprimer</button>
+            `;
+            usersList.appendChild(li);
+          });
+        } else {
+          statusUsers.textContent = data.message || "Erreur lors du chargement des utilisateurs.";
+        }
+      } catch (error) {
+        console.error("Erreur :", error);
+        statusUsers.textContent = "Erreur de connexion au serveur.";
+      }
+    }
+
+    // Fonction pour supprimer une chasse
+    async function deleteChasse(chasseId) {
+      try {
+        const response = await fetch(`${BASE_URL}/admin/delete-chasse/${chasseId}`, { method: "DELETE" });
+        if (response.ok) {
+          alert("Chasse supprimée avec succès !");
+          fetchChasses(); // Recharger la liste
+        } else {
+          const error = await response.json();
+          alert("Erreur : " + error.message);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
+        alert("Erreur de connexion au serveur.");
+      }
+    }
+
+    // Fonction pour supprimer une équipe
+    async function deleteTeam(teamId) {
+      try {
+        const response = await fetch(`${BASE_URL}/admin/delete-team/${teamId}`, { method: "DELETE" });
+        if (response.ok) {
+          alert("Équipe supprimée avec succès !");
+          fetchTeams(); // Recharger la liste
+        } else {
+          const error = await response.json();
+          alert("Erreur : " + error.message);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
+        alert("Erreur de connexion au serveur.");
+      }
+    }
+
+    // Fonction pour supprimer un utilisateur
+    async function deleteUser(userId) {
+      try {
+        const response = await fetch(`${BASE_URL}/admin/delete-user/${userId}`, { method: "DELETE" });
+        if (response.ok) {
+          alert("Utilisateur supprimé avec succès !");
+          fetchUsers(); // Recharger la liste
+        } else {
+          const error = await response.json();
+          alert("Erreur : " + error.message);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
+        alert("Erreur de connexion au serveur.");
+      }
+    }
+
+    // Charger les données au chargement de la page
+    fetchChasses();
+    fetchTeams();
+    fetchUsers();
+  </script>
+</body>
+</html>
